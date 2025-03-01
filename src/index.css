@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: black;
+  color: white;
+  cursor: none;
+}
+
+.spiral-container {
+  perspective: 1000px;
+}
+
+a, button {
+  cursor: none;
+}
+
+@media (max-width: 768px) {
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 0.5;
+  }
+  
+  .group:active .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+}

@@ -3,15 +3,28 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePortfolioData } from './hooks/usePortfolioData';
+import Loader from './components/Loader';
 
 function Home() {
-  const { data, loading, error } = usePortfolioData();
+  const { data, loading: dataLoading, error } = usePortfolioData();
+  const [loading, setLoading] = useState(true);
   const { scrollYProgress } = useScroll();
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set minimum loading time of 3 seconds
+    const timer = setTimeout(() => {
+      if (!dataLoading) {
+        setLoading(false);
+      }
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [dataLoading]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -32,10 +45,10 @@ function Home() {
     document.querySelector(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (loading) {
+  if (loading || dataLoading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        Loading...
+        <Loader />
       </div>
     );
   }
@@ -422,11 +435,6 @@ function Home() {
                 </div>
               ))}
             </div>
-
-            <p className="text-center mt-8 text-zinc-400">
-              Did not find the answer you're looking for?<br />
-              Contact <a href="mailto:info@example.com" className="text-white">karthick1242004@gmail.com</a>
-            </p>
           </section>
 
           <section className="mt-32 relative" id="contact">
